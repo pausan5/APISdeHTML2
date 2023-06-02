@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="ES">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">  
+    <title>APIs de HTML</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Dosis&display=swap" rel="stylesheet">
+    <style>
+
+       *{
+        font-family: 'Dosis', sans-serif;
+        color: #fe7f2d;
+        margin: 10px;
+        box-sizing: border-box;
+        }
+
+      h4{
+        font-size: large;
+        }
+            
+      .archivo{
+        font-size: 75%;
+        background-color: #fcca46;
+        border-radius: 0.5rem;
+        }
+
+        .container {
+        background-color: #233d4d;
+        width: 30rem;
+        height: auto;
+        padding: 2rem;
+        border-radius: 1rem;
+        }
+
+        #video {
+        width: 96%;
+        height: 90%;
+        }
+
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h4>Reproductor de video</h4>
+        <div class="archivo">
+            <input type="file" name="file" id="file" accept="video/*" style="color: #233d4d">
+            <output id="outputVideo"></output>
+        </div>
+
+        <video id="video"></video>
+        <div id="buttons">
+            <button role="button" onclick="document.getElementById('video').play();" id="play" style="visibility: hidden; color: #233d4d; font-weight: bold;">Play</button>
+            <button role="button" onclick="document.getElementById('video').pause();"  id="pause" style="visibility: hidden; color: #233d4d; font-weight: bold">Pausa</button>
+            <button role="button" onclick="document.getElementById('video').volume += 0.1;"  id="volumeUp"  style="visibility: hidden; color: #233d4d; font-weight: bold">Subir volumen</button>
+            <button role="button" onclick="document.getElementById('video').volume -= 0.1;"  id="volumeDown" style="visibility: hidden; color: #233d4d; font-weight: bold">Bajar volumen</button>
+        </div>
+    </div>
+
+<script>
+if (window.File && window.FileReader && window.FileList) {
+    console.log('Las APIs son correctas');
+}
+
+else {
+    alert('Error de archivo. Intente nuevamente.');
+}
+
+function handleFileSelect(e) {
+    var file = e.target.files[0];
+
+    if (!file.type.match('video.*')){
+        return;
+    }
+
+    var reader = new FileReader();
+
+    reader.onload = (function (theFile){
+        return function (e) {
+
+            var videoDiv = document.createElement('div');
+
+            videoDiv.innerHTML = '<video controls id="video" src="' + e.target.result + '" title="'+ theFile.name + '"/>';
+
+            document.getElementById('outputVideo').insertBefore(videoDiv, null);
+
+            alert('Cargando video...');
+            
+            document.getElementById('video').addEventListener('canplay', () => {
+
+                play.style.visibility = 'visible';
+                pause.style.visibility = 'visible';
+                volumeUp.style.visibility = 'visible';
+                volumeDown.style.visibility = 'visible';
+            });
+        }
+
+    }) (file);
+
+    reader.readAsDataURL(file);
+}
+
+document.getElementById('file').addEventListener('change', handleFileSelect, false);
+</script>
+</body>
+</html>
